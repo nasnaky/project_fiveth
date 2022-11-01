@@ -91,9 +91,47 @@ def AVG_HUMIDITY(request):
         })
 
 
-@api_view(['GET'])
-def CAMERA_link(request,pk):
+@api_view(['GET', 'DELETE', 'PUT'])
+def CAMERA_link(request, pk):
+    try:
+        ob = CAMERA.objects.get(pk=pk)
+        if request.method == "GET":
+            serializer = CAMERASerializer(ob)
+            return Response(serializer.data)
+        if request.method == "PUT":
+            serializer = CAMERASerializer(ob, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({
+                    "message": "수정 완료 "
+                })
+            return Response({
+                "message": "오류 발생."
+            })
+        if request.method == "DELETE":
+            ob.delete()
+            return Response({
+                "message": "삭제 완료"
+            })
+    except Exception:
+        return Response({
+            "message": "객체 없음."
+        })
+
+
+@api_view(['POST', 'GET'])
+def CAMARA_LINK_C(request):
+    if request.method == "POST":
+        serializer = CAMERASerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({
+                "message": "등록 완료"
+            })
+        return Response({
+            "message": "오류 발생"
+        })
     if request.method == "GET":
-        data = CAMERA.objects.last()
-        serializer = CAMERASerializer(data)
+        data = CAMERA.objects.all()
+        serializer = CAMERASerializer(data, many=True)
         return Response(serializer.data)
