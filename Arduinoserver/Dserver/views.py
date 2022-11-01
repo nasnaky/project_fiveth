@@ -135,3 +135,36 @@ def CAMARA_LINK_C(request):
         data = CAMERA.objects.all()
         serializer = CAMERASerializer(data, many=True)
         return Response(serializer.data)
+
+
+@api_view(['POST'])
+def TEMPERATURE_C(request):
+    if request.method == "POST":
+        serializer = TEMPERATURESerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({
+                "저장 완료"
+            })
+
+
+@api_view(['POST'])
+def HUMIDITY_C(request):
+    if request.method == "POST":
+        serializer = HUMIDITYSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({
+                "저장 완료"
+            })
+
+
+@api_view(['POST'])
+def REMNANT_W_C(request):
+    if request.method == "POST":
+        serializer = REMNANT_WSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({
+                "저장 완료"
+            })
