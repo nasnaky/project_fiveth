@@ -13,7 +13,12 @@ from .serializer import REMNANT_WSerializer, CAMERASerializer, TEMPERATURESerial
 @api_view(['GET'])
 def status1(request):
     if request.method == "GET":
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        try:
+            data = TEMPERATURE.objects.filter(TIME__range=[timezone.now() - timedelta(minutes=10), timezone.now()])
+            dataset = data[0]
+            return Response(status=status.HTTP_200_OK)
+        except Exception:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])
