@@ -6,9 +6,11 @@ from django.db.models import Q, Avg
 from datetime import date, datetime, timedelta
 from rest_framework.decorators import api_view
 from django.utils import timezone
+import requests
 
 from .models import USER, SERVER
 from .serializer import USERSerializers, SERVERSerializers, SERVERCreateSerializers, SERVERListSerializers
+
 
 
 @api_view(['POST'])
@@ -64,6 +66,15 @@ def SERVER_list(request, pk):
     if request.method == "GET":
         user = USER.objects.get(pk=pk)
         data = SERVER.objects.filter(USER=user).order_by('-id')
+        for i in data:
+            try:
+                response = requests.get(i.LINK)
+                if response.status_code == 200:
+                    i.STATUS = 1
+                elif response.status_code == 400:
+                    i.STATUS = 2
+            except Exception:
+                i.STATUS = 3
         serializer = SERVERListSerializers(data, many=True)
         return Response(serializer.data)
 
