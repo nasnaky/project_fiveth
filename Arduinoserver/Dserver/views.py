@@ -9,6 +9,7 @@ from .models import CAMERA, TEMPERATURE, HUMIDITY, REMNANT_W
 from .serializer import REMNANT_WSerializer, CAMERASerializer, TEMPERATURESerializer, HUMIDITYSerializer
 
 
+# 상태 구별 코드 주과
 @api_view(['GET'])
 def status1(request):
     if request.method == "GET":
