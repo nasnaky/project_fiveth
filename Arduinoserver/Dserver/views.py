@@ -62,6 +62,22 @@ def list_HUMIDITY(request, i):
 
 
 @api_view(['GET'])
+def M_list_TEMPERATURE(request, i):
+    if request.method == "GET":
+        data = TEMPERATURE.objects.all().order_by('-id')[i * 4:i * 4 + 4]
+        serializer = TEMPERATURESerializer(data, many=True)
+        return Response(serializer.data)
+
+
+@api_view(['GET'])
+def M_list_HUMIDITY(request, i):
+    if request.method == "GET":
+        data = HUMIDITY.objects.all().order_by('-id')[i * 4:i * 4 + 4]
+        serializer = HUMIDITYSerializer(data, many=True)
+        return Response(serializer.data)
+
+
+@api_view(['GET'])
 def AVG_TEMPERATURE(request):
     if request.method == "GET":
         data = TEMPERATURE.objects.last()

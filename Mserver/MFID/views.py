@@ -58,7 +58,7 @@ def Login(request):
 def SERVER_list(request, pk):
     if request.method == "GET":
         user = USER.objects.get(pk=pk)
-        data = SERVER.objects.filter(USER=user).order_by('-id')
+        data = SERVER.objects.filter(USER=user).order_by('id')
         for i in data:
             try:
                 response = requests.get(i.LINK)
@@ -90,10 +90,12 @@ def SERVER_C(request):
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def SERVER_detail(request, pk):
-    data = SERVER.objects.get(pk=pk)
     if request.method == "GET":
-        serializer = SERVERSerializers(data)
+        data = USER.objects.get(pk=pk)
+        data = SERVER.objects.filter(USER=data).order_by('id')
+        serializer = SERVERSerializers(data, many=True)
         return Response(serializer.data)
+    data = SERVER.objects.get(pk=pk)
     if request.method == "PUT":
         serializer = SERVERSerializers(data, data=request.data)
         if serializer.is_valid():
